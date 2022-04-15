@@ -26,7 +26,19 @@ function validateProject(req, res, next) {
     }
 }
 
+
+function validateProjectUpdate(req, res, next) {
+    const { name, description, completed } = req.body
+    if (!name || !description || typeof completed != 'boolean') {
+        res.status(400).json({ message: 'missing required fields' })
+    } else {
+        next()
+    }
+}
+
+
 module.exports = {
     validateProjectId,
-    validateProject
+    validateProject,
+    validateProjectUpdate
 }

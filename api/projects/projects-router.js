@@ -1,5 +1,5 @@
 const express = require('express');
-const { validateProjectId, validateProject } = require('./projects-middleware');
+const { validateProjectId, validateProject, validateProjectUpdate  } = require('./projects-middleware');
 
 const Project = require('./projects-model');
 
@@ -14,11 +14,6 @@ router.get('/', (req, res) => {
 })
 
 router.get('/:id', validateProjectId, (req, res) => {
-  // let id = req.params.id
-  // Project.get(id)
-  //     .then(project => {
-  //         res.json(project)
-  //     })
   res.json(req.project)
 })
 
@@ -30,7 +25,7 @@ router.post('/', validateProject, (req, res, next) => {
     .catch(next)
 })
 
-router.put('/:id', validateProjectId, validateProject, (req, res, next) => {
+router.put('/:id', validateProjectId, validateProjectUpdate, async (req, res, next) => {
   Project.update(req.params.id, { name: req.body.name, description: req.body.description, completed: req.body.completed })
     .then(() => {
       return Project.get(req.params.id)
@@ -38,7 +33,7 @@ router.put('/:id', validateProjectId, validateProject, (req, res, next) => {
     .then(project => {
       res.json(project)
     })
-    .catch(next)
+    .catch(next) 
 });
 
 router.delete('/:id', validateProjectId, async (req, res, next) => {
